@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Currency Data</title>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    .left-section {
+      flex: 3;
+      background-color: #f2f2f2;
+      display: flex;
+      overflow-y: scroll;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .right-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center; 
+      background-color: #fff;
+      padding: 20px;
+      overflow-y: scroll;
+    }
+
+    .content {
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-section">
+      <h1> BDAT - Data Programming Project </h1>
+      <br/>
+      <h2> Currency Performance Calculator </h2>
+      <br/>
+      <h3> To implement all the bases of the project we thought of using the api available online for the currency rate conversion and then representing these values through charts as per user selection. We have decided to go with 2 currencies, USD & CAD basically because both of these are the currencies of the North American Continent. </h3>
+      <br/>
+      <br/>
+      <h3> Want to check the data, click on the button to get the chart.</h3>
+      <p> Note: If you are using this for the first time today, please click on load data to fetch the latest currency rates from the API.</p>
+        {% if img_path_usd %}
+            <h3>{{ ans }}</h3>
+            <img src="{{ img_path_usd }}" alt="USD Graph" />
+        {% endif %}
+        {% if img_path_cad %}
+            <h3>{{ ans }}</h3>
+            <img src="{{ img_path_cad }}" alt="CAD Graph" />
+        {% endif %}
+    </div>
+    <div class="right-section">
+      <button><input class="button" type="submit" value="Reset Page" onclick="refreshPage()"> </button>
+      <form action="/update-data" method="post">
+        <button><input type="submit" class="button" value="Load Data"></button></form>
+      <form action="/fetch-CAD" method="post">
+        <button><input class="button" type="submit" value="CAD Data"> </button></form>
+      <form action="/fetch-USD" method="post">
+        <button><input class="button" type="submit" value="USD Data"> </button></form>
+    </div>
+  </div>
+
+  <script>
+
+    function refreshPage() {
+      window.location.href = "/"; // This reloads the current page
+    }
+
+    function updateData() {
+      $.post('/update-data', function(data) {
+        document.getElementById("button1-data").innerHTML = data;
+      });
+    }
+
+    function fetchUSD() {
+      $.post('/fetch-USD', function(data) {
+        document.getElementById("button1-data").innerHTML = data;
+      });
+    }
+
+    function fetchCAD() {
+      $.post('/fetch-CAD', function(data) {
+        document.getElementById("button1-data").innerHTML = data;
+      });
+    }
+
+    function showContent(buttonId) {
+      // Hide all content sections
+      var contents = document.getElementsByClassName("content");
+      for (var i = 0; i < contents.length; i++) {
+        contents[i].style.display = "none";
+      }
+
+      // Show the content section for the clicked button
+      var content = document.getElementById(buttonId + "-content");
+      content.style.display = "block";
+    }
+  </script>
+</body>
+</html>
